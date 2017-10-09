@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Artifact Logger</string>
+    <string name="artifact_number_key">artifact number...</string>
+    <string name="location_key">location...</string>
+    <string name="depth_key">depth...</string>
+    <string name="hist_pre_key">prehistoric/historic...</string>
+    <string name="description_key">description...</string>
 </resources>

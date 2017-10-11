@@ -1,5 +1,7 @@
 package com.example.walter.artifactlogger;
 
+import java.util.Vector;
+
 /**
  * Created by Walter on 9/12/2017.
  */
@@ -11,16 +13,20 @@ public class artifactObject extends unitObject {
     protected String depth;
     protected String hist_pre;
     protected String description;
-    protected String site_number;
-    protected String unit_number;
+    protected Vector<String> photos = new Vector(1);
+    //protected String site_number;
+    //protected String unit_number;
 
 
     artifactObject(){
-        artifact_number = "";
-        location = "";
-        depth = "";
-        hist_pre = "";
-        description = "";
+        this.artifact_number = "";
+        this.location = "";
+        this.depth = "";
+        this.hist_pre = "";
+        this.description = "";
+        for (int i = 0; i < photos.size(); i++){
+            photos.add(i,"");
+        }
     }
 
 
@@ -40,12 +46,15 @@ public class artifactObject extends unitObject {
     public String getDescription(){
         return description;
     }
-    public String getSite_number() {
+    public String getPhoto(int index) {
+        return photos.elementAt(index);
+    }
+    /*public String getSite_number() {
         return site_number;
-    }
-    public String getUnit_number() {
+    }*/
+    /*public String getUnit_number() {
         return unit_number;
-    }
+    }*/
 
 
     //Setters
@@ -64,10 +73,13 @@ public class artifactObject extends unitObject {
     public void setDescription(String new_description){
         this.description = new_description;
     }
-    public void setSite_number(String site_number) {
+    public void setPhotos(String new_photoPath) {
+        photos.addElement(new_photoPath);
+    }
+    /*public void setSite_number(String site_number) {
         this.site_number = site_number;
     }
     public void setUnit_number(String unit_number) {
         this.unit_number = unit_number;
-    }
+    }*/
 }

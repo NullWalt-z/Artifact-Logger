@@ -7,7 +7,7 @@ package com.example.walter.artifactlogger;
 
 
 public class siteObject {
-    //public String site_number;
-    //public com.example.walter.artifactlogger.unitObject[] unitArray;
+    public String site_number;
+    public com.example.walter.artifactlogger.unitObject[] unitArray;
     //unitArray = new com.example.walter.artifactlogger.unitObject[10];
 }

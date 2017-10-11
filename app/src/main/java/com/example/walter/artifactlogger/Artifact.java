@@ -21,24 +21,27 @@ import android.widget.ImageView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Vector;
 
 
 public class Artifact extends AppCompatActivity implements View.OnClickListener{
 
     SharedPreferences preferences;
-    ImageView preview;
+    public ImageView preview;
     ImageButton add_picture_button;
     ImageButton save_artifact_button;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 1;
     public String imageFileName;
     public int imageCount; //increment for every image saved
-    public artifactObject newArtifact;
+    public artifactObject newArtifact = new artifactObject();
     public EditText artifact_number_view;
     public EditText location_view;
     public EditText depth_view;
     public EditText pre_hist_view;
     public EditText desc_view;
+    public String mCurrentPhotoPath;
+    public Vector<String> photo_log;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,18 +49,19 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_artifact);
 
-        artifactObject newArtifact = new artifactObject();
+        //artifactObject newArtifact = new artifactObject();
         add_picture_button = (ImageButton)findViewById(R.id.add_picture_button);
         add_picture_button.setOnClickListener(this);
         save_artifact_button = (ImageButton)findViewById(R.id.save_button);
         save_artifact_button.setOnClickListener(this);
-        ImageView photoPreview = (ImageView)findViewById(R.id.camera_preview);
+        //ImageView photoPreview = (ImageView)findViewById(R.id.camera_preview);
         artifact_number_view = (EditText)findViewById(R.id.artifact_number_text);
         location_view = (EditText)findViewById(R.id.location_text);
         depth_view = (EditText)findViewById(R.id.depth_text);
         pre_hist_view = (EditText)findViewById(R.id.pre_hist_text);
         desc_view = (EditText)findViewById(R.id.depth_text);
         preview = (ImageView)findViewById(R.id.camera_preview);
+        photo_log = new Vector(1);
 
     }
 
@@ -65,9 +69,13 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         switch (v.getId()){
             case R.id.add_picture_button:
                 dispatchTakePictureIntent();
+                photo_log.addElement(mCurrentPhotoPath);
+                galleryAddPic();
                 setPic();
+                break;
             case R.id.save_button:
                 newArtifact = saveArtifact(newArtifact);
+                break;
             default:
                 break;
         }
@@ -79,6 +87,7 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         thisArtifact.setDepth(depth_view.getText().toString());
         thisArtifact.setHist_pre(pre_hist_view.getText().toString());
         thisArtifact.setDescription(desc_view.getText().toString());
+
         return thisArtifact;
     }
 
@@ -88,7 +97,7 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         return imageName;
     }
 
-    String mCurrentPhotoPath;
+
     private File createImageFile() throws IOException {
          //Create an image file name
         //String imageFileName = getImageName();
@@ -118,14 +127,31 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
             }
             // Continue only if the File was successfully created
             if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.walter.artifactlogger",
-                        photoFile);
+                Uri photoURI = FileProvider.getUriForFile(getApplicationContext(), "com.example.walter.artifactlogger.fileprovider", photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
             }
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+            //Bundle extras = data.getExtras();
+            Bitmap photo = BitmapFactory.decodeFile(mCurrentPhotoPath);
+            preview.setImageBitmap(photo);
+        }
+    }
+
+    private void galleryAddPic() {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(mCurrentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        this.sendBroadcast(mediaScanIntent);
+    }
+
+
     private void setPic() {
         // Get the dimensions of the View
         int targetW = preview.getWidth();
@@ -144,11 +170,13 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
-        bmOptions.inPurgeable = true;
+        //bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         preview.setImageBitmap(bitmap);
     }
+
+
 
 }
 

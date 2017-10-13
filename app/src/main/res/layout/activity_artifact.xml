@@ -11,7 +11,7 @@
         android:layout_width="168dp"
         android:layout_height="44dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:hint="Artifact Number..."
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -38,7 +38,7 @@
         android:layout_width="168dp"
         android:layout_height="44dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:hint="Location..."
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -53,7 +53,7 @@
         android:layout_width="166dp"
         android:layout_height="41dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:hint="Depth..."
         android:layout_marginLeft="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -80,7 +80,7 @@
         android:layout_width="360dp"
         android:layout_height="300dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="text"
         android:hint="Description..."
         android:layout_marginLeft="8dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -108,12 +108,12 @@
         app:srcCompat="@android:drawable/ic_input_add" />
 
     <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="38dp"
-        android:layout_height="37dp"
+        android:id="@+id/location_button"
+        android:layout_width="25dp"
+        android:layout_height="27dp"
         app:srcCompat="@android:drawable/ic_menu_compass"
         app:layout_constraintRight_toLeftOf="@+id/camera_preview"
         android:layout_marginRight="13dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="25dp"
         app:layout_constraintBottom_toTopOf="@+id/depth_text" />
 </android.support.constraint.ConstraintLayout>

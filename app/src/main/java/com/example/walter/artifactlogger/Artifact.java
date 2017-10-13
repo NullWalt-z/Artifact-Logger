@@ -1,15 +1,22 @@
 package com.example.walter.artifactlogger;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi; //why?
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,10 +25,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Vector;
+
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 
 
 public class Artifact extends AppCompatActivity implements View.OnClickListener{
@@ -30,8 +41,10 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
     public ImageView preview;
     ImageButton add_picture_button;
     ImageButton save_artifact_button;
+    ImageButton location_but;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_TAKE_PHOTO = 1;
+    static final int MY_PERMISSION_ACCESS_FINE_LOCATION = 1;
     public String imageFileName;
     public int imageCount; //increment for every image saved
     public artifactObject newArtifact = new artifactObject();
@@ -42,6 +55,7 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
     public EditText desc_view;
     public String mCurrentPhotoPath;
     public Vector<String> photo_log;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +68,8 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         add_picture_button.setOnClickListener(this);
         save_artifact_button = (ImageButton)findViewById(R.id.save_button);
         save_artifact_button.setOnClickListener(this);
+        location_but = (ImageButton)findViewById(R.id.location_button);
+        location_but.setOnClickListener(this);
         //ImageView photoPreview = (ImageView)findViewById(R.id.camera_preview);
         artifact_number_view = (EditText)findViewById(R.id.artifact_number_text);
         location_view = (EditText)findViewById(R.id.location_text);
@@ -74,7 +90,12 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
                 setPic();
                 break;
             case R.id.save_button:
+                //save Artifact as artifactObject
                 newArtifact = saveArtifact(newArtifact);
+                break;
+            case R.id.location_button:
+                //Pull GPS cords from phone
+                location_view.setText(getLocation(), TextView.BufferType.EDITABLE);
                 break;
             default:
                 break;
@@ -96,7 +117,6 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         imageCount++;
         return imageName;
     }
-
 
     private File createImageFile() throws IOException {
          //Create an image file name
@@ -151,7 +171,6 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         this.sendBroadcast(mediaScanIntent);
     }
 
-
     private void setPic() {
         // Get the dimensions of the View
         int targetW = preview.getWidth();
@@ -175,6 +194,44 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
         preview.setImageBitmap(bitmap);
     }
+
+    public boolean checkPermission(){
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, MY_PERMISSION_ACCESS_FINE_LOCATION);
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                return true;
+            else
+                return false;
+        }
+        else
+            return true;
+    }
+
+    public String getLocation(){
+        LocationManager lManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (checkPermission() == true) {
+            Location curLocation = lManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (curLocation != null) {
+                double numLat = curLocation.getLatitude();
+                double numLon = curLocation.getLongitude();
+                DecimalFormat df = new DecimalFormat(".##");
+                String StringLat = df.format(numLat);
+                String StringLon = df.format(numLon);
+                String thisLocation = ("Lat:" + StringLat + " Lon:" + StringLon);
+                return thisLocation;
+            }
+            else
+                return "GPS data no available";
+        }
+        else if (checkPermission() == false)
+            return "false";
+        else
+            return "error";
+
+    }
+
+
 
 
 

@@ -20,7 +20,7 @@ public class Site extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void newUnit(){
-        Intent intent = new Intent(this, Unit.class);
+        Intent intent = new Intent(this, artifactList.class);
         startActivity(intent);
     }
 

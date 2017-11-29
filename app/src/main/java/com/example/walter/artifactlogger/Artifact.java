@@ -55,6 +55,7 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
     public EditText desc_view;
     public String mCurrentPhotoPath;
     public Vector<String> photo_log;
+    public DBHandler db;
 
 
     @Override
@@ -109,6 +110,9 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         thisArtifact.setHist_pre(pre_hist_view.getText().toString());
         thisArtifact.setDescription(desc_view.getText().toString());
 
+        db = new DBHandler(this, null, null, 1);
+
+        db.addArtifact(thisArtifact);
         return thisArtifact;
     }
 

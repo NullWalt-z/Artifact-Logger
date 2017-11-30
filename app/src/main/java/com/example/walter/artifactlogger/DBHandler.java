@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
 import android.database.Cursor;
+
+import java.util.ArrayList;
 import java.util.Vector;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Vector;
 
 public class DBHandler extends SQLiteOpenHelper{
 
-    private static final String DATABASE_NAME = "Site_Info";
+    private static final String DATABASE_NAME = "artifact_list";
     private static final int DATABASE_VERSION = 1;
 
     //private static final String SITE_TABLE = "site";
@@ -32,6 +34,7 @@ public class DBHandler extends SQLiteOpenHelper{
     private static final String ARTIFACT_COLUMN_DEPTH = "depth";
     private static final String ARTIFACT_COLUMN_AGE = "pre_hist";
     private static final String ARTIFACT_COLUMN_DESCRIPTION = "desc";
+    private static final String ARTIFACT_COLUMN_PREVIEW = "preview";
 
     //private static final String PHOTO_TABLE = "photo";
     //private static final String PHOTO_COLUMN_NUMBER = "photo_number";
@@ -51,8 +54,11 @@ public class DBHandler extends SQLiteOpenHelper{
     public void onCreate(SQLiteDatabase database) {
         //database.execSQL("create table " + SITE_TABLE + "(" + SITE_COLUMN_NUMBER + " primary key, " + SITE_COLUMN_LOCATION + ")");
         //database.execSQL("create table unit" + "(unit_number text primary key, site_number text, location text, depth text, pre_hist text, desc text)");
-        database.execSQL("create table "+ARTIFACT_TABLE+ "("+ARTIFACT_COLUMN_NUMBER+" text primary key, "+ARTIFACT_COLUMN_LOCATION+" text, "+ARTIFACT_COLUMN_DEPTH+" text, "+ARTIFACT_COLUMN_AGE+" text, "+ARTIFACT_COLUMN_DESCRIPTION+" text)");
+        database.execSQL("create table "+ARTIFACT_TABLE+"("+ARTIFACT_COLUMN_NUMBER+" text primary key unique, "+ARTIFACT_COLUMN_LOCATION+" text, "+ARTIFACT_COLUMN_DEPTH+" text, "+ARTIFACT_COLUMN_AGE+" text, "+ARTIFACT_COLUMN_DESCRIPTION+" text, "+ARTIFACT_COLUMN_PREVIEW+")");
         //database.execSQL("create table photo" + "(photo_number text primary key, artifact_number text, path text");
+        //database(ARTIFACT_TABLE, {ARTIFACT_COLUMN_NUMBER, ARTIFACT_COLUMN_LOCATION,ARTIFACT_COLUMN_DEPTH, ARTIFACT_COLUMN_DEPTH, ARTIFACT_COLUMN_AGE
+        //, ARTIFACT_COLUMN_DESCRIPTION, ARTIFACT_COLUMN_PREVIEW} );
+
     }
 
 
@@ -69,6 +75,7 @@ public class DBHandler extends SQLiteOpenHelper{
         values.put(ARTIFACT_COLUMN_DEPTH, artifact.getDepth());
         values.put(ARTIFACT_COLUMN_AGE, artifact.getHist_pre());
         values.put(ARTIFACT_COLUMN_DESCRIPTION, artifact.getDescription());
+        values.put(ARTIFACT_COLUMN_PREVIEW, artifact.getPhoto());
         //values.put(COLUMN_QUANTITY, product.getQuantity());
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -92,7 +99,8 @@ public class DBHandler extends SQLiteOpenHelper{
             artifact.setLocation(cursor.getString(1));
             artifact.setDepth(cursor.getString(2));
             artifact.setHist_pre(cursor.getString(3));
-            artifact.setPhotos(cursor.getString(4));
+            artifact.setDescription(cursor.getString(4));
+            artifact.setPhoto(cursor.getString(5));
             cursor.close();
             }
         else {
@@ -102,7 +110,7 @@ public class DBHandler extends SQLiteOpenHelper{
         return artifact;
     }
 
-    public Vector<artifactObject> getAllArtifacts() {
+    public ArrayList<artifactObject> getAllArtifacts() {
         String query = "Select * FROM " + ARTIFACT_TABLE;
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -110,36 +118,18 @@ public class DBHandler extends SQLiteOpenHelper{
         Cursor cursor = db.rawQuery(query, null);
 
         artifactObject artifact = new artifactObject();
-        Vector<artifactObject> artifactList = new Vector(1);
-        /*
-        do{
-            if (cursor.moveToFirst()) {
-                cursor.moveToFirst();
-                artifact.setArtifact_number(cursor.getString(0));
-                artifact.setLocation(cursor.getString(1));
-                artifact.setDepth(cursor.getString(2));
-                artifact.setHist_pre(cursor.getString(3));
-                artifact.setPhotos(cursor.getString(4));
-                cursor.close();
-                artifactList.add(artifact);
-            } else {
-                artifact = null;
-            }
-            cursor.
+        ArrayList<artifactObject> artifactList = new ArrayList();
 
-        }
-        while(artifact != null);
-        */
-
-        int offset = 0;
+        //int offset = 0;
         while(cursor.moveToNext()) {
-            artifact.setArtifact_number(cursor.getString(0+offset));
-            artifact.setLocation(cursor.getString(1+offset));
-            artifact.setDepth(cursor.getString(2+offset));
-            artifact.setHist_pre(cursor.getString(3+offset));
-            artifact.setPhotos(cursor.getString(4+offset));
+            artifact.setArtifact_number(cursor.getString(0));
+            artifact.setLocation(cursor.getString(1));
+            artifact.setDepth(cursor.getString(2));
+            artifact.setHist_pre(cursor.getString(3));
+            artifact.setDescription(cursor.getString(4));
+            //artifact.setPhoto(cursor.getString(5+offset));
             artifactList.add(artifact);
-            offset += 5;
+            //offset += 5;
         }
         db.close();
         return artifactList;

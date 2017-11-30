@@ -55,7 +55,8 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
     public EditText desc_view;
     public String mCurrentPhotoPath;
     public Vector<String> photo_log;
-    public DBHandler db;
+    //public DBHandler db;
+    //DBHandler db= new DBHandler(this,null,null,1);
 
 
     @Override
@@ -93,6 +94,7 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
             case R.id.save_button:
                 //save Artifact as artifactObject
                 newArtifact = saveArtifact(newArtifact);
+
                 break;
             case R.id.location_button:
                 //Pull GPS cords from phone
@@ -109,9 +111,8 @@ public class Artifact extends AppCompatActivity implements View.OnClickListener{
         thisArtifact.setDepth(depth_view.getText().toString());
         thisArtifact.setHist_pre(pre_hist_view.getText().toString());
         thisArtifact.setDescription(desc_view.getText().toString());
-
-        db = new DBHandler(this, null, null, 1);
-
+        thisArtifact.setPhoto(mCurrentPhotoPath);
+        DBHandler db = new DBHandler(this, null, null, 1);
         db.addArtifact(thisArtifact);
         return thisArtifact;
     }

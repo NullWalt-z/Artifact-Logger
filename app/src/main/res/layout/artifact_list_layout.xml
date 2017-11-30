@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/artifact_num_col"
+        android:layout_width="60dp"
+        android:layout_height="50dp" />
+
+    <TextView
+        android:id="@+id/location_col"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/artifact_num_col"
+        android:layout_toEndOf="@+id/artifact_num_col" />
+
+    <TextView
+        android:id="@+id/depth_col"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/location_col"
+        android:layout_toEndOf="@+id/location_col" />
+
+    <TextView
+        android:id="@+id/age_col"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/depth_col"
+        android:layout_toEndOf="@+id/depth_col" />
+
+    <TextView
+        android:id="@+id/desc_col"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/age_col"
+        android:layout_toEndOf="@+id/age_col" />
+
+    <TextView
+        android:id="@+id/thumbnail_col"
+        android:layout_width="60dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/desc_col"
+        android:layout_toEndOf="@+id/desc_col" />
+
+</RelativeLayout>

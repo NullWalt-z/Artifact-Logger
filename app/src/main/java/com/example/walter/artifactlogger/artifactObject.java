@@ -13,7 +13,7 @@ public class artifactObject extends unitObject {
     protected String depth;
     protected String hist_pre;
     protected String description;
-    protected Vector<String> photos = new Vector(1);
+    protected String photo;
     //protected String site_number;
     //protected String unit_number;
 
@@ -24,9 +24,16 @@ public class artifactObject extends unitObject {
         this.depth = "";
         this.hist_pre = "";
         this.description = "";
-        for (int i = 0; i < photos.size(); i++){
-            photos.add(i,"");
-        }
+        this.photo = "";
+    }
+
+    artifactObject(String artNum, String loc, String dep, String age, String desc, String photo){
+        this.artifact_number = artNum;
+        this.location = loc;
+        this.depth = dep;
+        this.hist_pre = age;
+        this.description = desc;
+        this.photo = photo;
     }
 
 
@@ -46,8 +53,8 @@ public class artifactObject extends unitObject {
     public String getDescription(){
         return description;
     }
-    public String getPhoto(int index) {
-        return photos.elementAt(index);
+    public String getPhoto() {
+        return photo;
     }
     /*public String getSite_number() {
         return site_number;
@@ -73,9 +80,7 @@ public class artifactObject extends unitObject {
     public void setDescription(String new_description){
         this.description = new_description;
     }
-    public void setPhotos(String new_photoPath) {
-        photos.addElement(new_photoPath);
-    }
+    public void setPhoto(String new_photoPath) { this.photo = new_photoPath; }
     /*public void setSite_number(String site_number) {
         this.site_number = site_number;
     }
